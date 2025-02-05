@@ -23,7 +23,7 @@ exports.getProduct = async (req, res) => {
 exports.createProduct = async (req, res) => {
     try {
         const { name, description, price, categoryId } = req.body;
-        const image = req.file ? req.file.path : null; // Get the image path
+        const image = req.file ? req.file.path : null;
 
         const product = await Product.create({
             name,
@@ -43,6 +43,9 @@ exports.updateProduct = async (req, res) => {
         const { name, description, price, categoryId } = req.body;
         const image = req.file ? req.file.path : null;
 
+        const product = await Product.findByPk(req.params.id);
+        const existingImages = product.image || [];
+
         const [updated] = await Product.update({
             name,
             description,
@@ -55,7 +58,6 @@ exports.updateProduct = async (req, res) => {
 
         if (!updated) return res.status(404).json({ error: 'Product not found' });
         
-        // Get the updated product
         const updatedProduct = await Product.findByPk(req.params.id, { 
             include: Category 
         });

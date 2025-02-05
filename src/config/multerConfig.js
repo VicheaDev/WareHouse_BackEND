@@ -12,17 +12,17 @@ const storage = multer.diskStorage({
 // Initialize upload
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 1000000 }, // Limit file size to 1MB
+    // Removed file size limit
     fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt|mp4|mp3|zip|rar/; // Allowed file types
+        const filetypes = /jpeg|jpg|png|gif/; // Allowed image types
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
         if (mimetype && extname) {
             return cb(null, true);
         } else {
-            cb('Error: Invalid file type! Only images and documents are allowed.');
+            cb('Error: Invalid file type! Only images are allowed.');
         }
     }
-}).single('image'); // 'image' is the field name for the uploaded file
+}).single('image'); // Change back to single file
 
 module.exports = upload; 
